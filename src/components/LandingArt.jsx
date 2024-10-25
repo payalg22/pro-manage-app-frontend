@@ -12,8 +12,10 @@ export default function LandingArt() {
           </div>
         </div>
         <div className={styles.tagline}>
-          <h1>Welcome aboard my friend </h1>
-          <h3>just a couple of clicks and we start</h3>
+          <p className={styles.heading}>Welcome aboard my friend</p>
+          <p className={styles.subheading}>
+            just a couple of clicks and we start
+          </p>
         </div>
       </div>
     </div>

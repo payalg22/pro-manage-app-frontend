@@ -1,0 +1,67 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #EDF5FE;
+    font-family: Poppins;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.container > div {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.container p {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.logo {
+    font-size: 1em;
+    font-weight: 700;
+    margin: 10px;
+    padding-left: 10%;
+}
+
+.logo p {
+    margin: 15px 10px;
+}
+
+.logo img, .options img, .logout img {
+    height: fit-content;
+    color: black;
+}
+
+.options {
+    margin: 10px;
+    font-weight: 500;
+    color: #707070;
+    background-color: transparent;
+    padding-left: 10%;
+}
+
+.isSelected  {
+    margin: 10px;
+    font-weight: 500;
+    color: black;
+    background: #4391ED1A;
+    padding-left: 10%;
+}
+
+.logout {
+    position: absolute;
+    bottom: 50px;
+    color: #CF3636;
+    font-weight: 500;
+    padding-left: 10%;
+}

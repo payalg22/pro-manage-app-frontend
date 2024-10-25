@@ -1,0 +1,15 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    font-family: "Open Sans";
+}
+
+.left {
+    width: 20%;
+}
+
+.right {
+    width: 40%;
+}

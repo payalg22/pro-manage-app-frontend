@@ -29,7 +29,7 @@
 }
 
 .imgcontainer {
-    height: 80%;    
+    height: 70%;    
 }
 
 .heroimg {
@@ -40,8 +40,20 @@
 
 .tagline {
     text-align: center;
+    font-family: 'Open Sans';
+    
+}
+
+.heading {
+    font-weight: 600;
+    font-size: 1.5em;
 }
 
 .tagline > * {
     margin: 10px;
+}
+
+.subheading {
+    font-weight: 400;
+    font-size: 1em;
 }
