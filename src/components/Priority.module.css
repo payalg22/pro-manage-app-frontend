@@ -1,0 +1,16 @@
+.container {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.marker {
+    height:5px;
+    width: 5px;
+    border-radius: 50%;
+}
+
+.type {
+    font-size: 0.5em;
+    margin: 0;
+}

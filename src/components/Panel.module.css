@@ -37,11 +37,6 @@
     margin: 15px 10px;
 }
 
-.logo img, .options img, .logout img {
-    height: fit-content;
-    color: black;
-}
-
 .options {
     margin: 10px;
     font-weight: 500;

@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:wght@400;500;600;700&display=swap');
+
+.container {
+    background-color: hsla(0, 0%, 100%, 1);
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+    border-radius: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    width: 90%;
+    height: 20px;
+}
+
+.title {
+    margin: 0;
+    width: 90%;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.chklistContainer {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px;
+}
+
+.chklistHeader > p {
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: 500;
+    font-family: Inter;
+}
+
+.chklistHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.expand {
+    height: 24px;
+    width: 24px;
+    background-color: rgba(238, 236, 236, 1);
+    border-radius: 3px;
+    color: rgba(118, 117, 117, 1);
+    cursor: pointer;
+}
+
+.list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.duedate {
+    background-color: rgba(207, 54, 54, 1);
+    color: white;
+}
+
+.normal {
+    background-color: rgba(219, 219, 219, 1);
+    color: rgba(90, 90, 90, 1);
+}
+
+.duedate, .category, .normal {    
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 0.5em;
+    font-family: Poppins;
+    font-weight: 500;
+}
+
+.category {
+    background-color: rgba(238, 236, 236, 1);
+    color: rgba(118, 117, 117, 1);
+    cursor: pointer;
+}
+
+.categoryList {
+    display: flex;
+    gap: 5px;
+    float: right;
+}
