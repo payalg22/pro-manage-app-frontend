@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./dashboard.module.css";
 import Panel from "../../components/Panel";
-import shareIcon from "../../assets/share.png";
 import Category from "../../components/Category";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { getToday } from "../../utils/getDates";
+import AddMemberModal from "../../components/AddMemberModal";
 
 export default function Dashboard() {
+  const [filter, setFilter] = useState("Today");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const filters = ["Today", "This Week", "This Month"];
+
+  useEffect(() => {
+    function handleMenuClose(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleMenuClose);
+    return () => {
+      document.removeEventListener("mousedown", handleMenuClose);
+    };
+  }, []);
+
   const category = [
     {
       name: "Backlog",
       tasks: [
         {
+          title: "Task no 1",
           priority: "low",
           checklist: ["item1", "item2"],
           duedate: "2024/10/26",
@@ -44,15 +65,13 @@ export default function Dashboard() {
     },
   ];
 
-  const getToday = (date = new Date()) => {
-    const shortDate = date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-    const [month, day, year] = shortDate.replace(",", "").split(" ");
+  const handleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
 
-    return `${day}th ${month}, ${year}`;
+  const handleSelection = (value) => {
+    setFilter(value);
+    handleMenu();
   };
 
   return (
@@ -67,10 +86,29 @@ export default function Dashboard() {
         </div>
         <div className={styles.header}>
           <p>Board</p>
-          <span className={styles.share}>
-            <img src={shareIcon} />
-            <p>Add People</p>
-          </span>
+          <AddMemberModal />
+          <div className={styles.menu} ref={menuRef}>
+            <span onClick={handleMenu} className={styles.filter}>
+              {filter}
+              <KeyboardArrowDownOutlinedIcon />
+            </span>
+            {isMenuOpen && (
+              <ul className={styles.options}>
+                {filters.map((selection, index) => {
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        handleSelection(selection);
+                      }}
+                    >
+                      {selection}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
         <div className={styles.body}>
           {category.map((item, index) => {

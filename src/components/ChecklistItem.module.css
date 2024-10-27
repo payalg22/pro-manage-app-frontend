@@ -18,6 +18,21 @@
   color: rgba(0, 0, 0, 1);
   font-family: Inter;
   font-weight: 400;
+  width: -webkit-fill-available;
+}
+
+.title {
+    border: none;
+    outline: none;
+    font-family: Inter;
+    font-size: 14px;
+    width: -webkit-fill-available;
+}
+
+.title:disabled {
+    background-color: transparent;
+    color: rgba(0, 0, 0, 1);
+    font-weight: 400;
 }
 
 .inputChkbox {
@@ -52,4 +67,10 @@
 .cbContainer input:checked ~ .chkbox {
   background-color: rgba(23, 162, 184, 1);
   border-color: rgba(23, 162, 184, 1);
+}
+
+.delete {
+    color: rgba(207, 54, 54, 1);
+    cursor: pointer;
+    margin-right: 5px;
 }

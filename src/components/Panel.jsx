@@ -6,6 +6,7 @@ import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlin
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
+import LogOutModal from "./LogOutModal";
 
 export default function Panel({ option }) {
   const navigate = useNavigate();
@@ -38,8 +39,7 @@ export default function Panel({ option }) {
         <p>Settings</p>
       </div>
       <div className={styles.logout}>
-        <LogoutOutlinedIcon color="#CF3636" />
-        <p>Log out</p>
+        <LogOutModal />
       </div>
     </div>
   );
