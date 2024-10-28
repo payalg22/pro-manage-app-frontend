@@ -4,6 +4,7 @@ import LandingArt from "../../components/LandingArt";
 import styles from "../login/login.module.css";
 import Form from "../../components/Form";
 import validateForm from "../../utils/validateForm";
+import { register } from "../../../services/auth";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ export default function Register() {
     confirmPassword: false,
   });
 
+  const [formError, setFormError] = useState("");
+
   useEffect(() => {
     setError({
       name: false,
@@ -27,11 +30,12 @@ export default function Register() {
       password: false,
       confirmPassword: false,
     });
+    setFormError("");
   }, [formData]);
 
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const { isValid, invalidFields } = validateForm(formData);
     setError(invalidFields);
@@ -42,7 +46,17 @@ export default function Register() {
         password: false,
         confirmPassword: false,
       });
-      console.log("Good to go");
+      const res = await register(formData);
+      console.log(res);
+      try {
+        if (res?.status === 201) {
+          navigate("/login");
+        } else {
+          setFormError(res.data.message);
+        }
+      } catch (error) {
+        setFormError(res.data.message);
+      }
     }
   }
 
@@ -105,6 +119,7 @@ export default function Register() {
       </div>
       <div className={styles.right}>
         <h2>Register</h2>
+        {formError && <p className={styles.error}>{formError}</p>}
         <Form
           fields={inputFields}
           onSubmit={handleSubmit}

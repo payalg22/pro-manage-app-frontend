@@ -27,4 +27,18 @@ const isPastDue = (due) => {
   return true;
 };
 
-export { getToday, formatDueDate, isPastDue };
+const getTodayISO = (date = new Date()) => {
+  return date.toISOString().slice(0, 10);
+};
+
+const getDueModal = (due) => {
+  const shortDate = new Date(due).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  });
+
+  return shortDate;
+};
+
+export { getToday, formatDueDate, isPastDue, getTodayISO, getDueModal };

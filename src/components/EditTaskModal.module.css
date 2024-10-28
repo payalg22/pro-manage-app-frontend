@@ -9,6 +9,7 @@
     padding: 30px;
     font-family: Inter;
     display: flex;
+    flex-direction: column;
 }
 
 .form {
@@ -18,7 +19,6 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    overflow-y: auto;
     font-weight: 500;
     font-size: 14px;
     position: relative;
@@ -37,7 +37,7 @@
     width: 100%;
 }
 
-.title, .assignee > input {
+.title {
     box-sizing: border-box;
     border: 1px solid rgba(226, 226, 226, 1);
     outline: 1px solid rgba(226, 226, 226, 1);
@@ -65,21 +65,30 @@
     cursor: pointer;
 }
 
+.priority .required {
+    margin-right: auto;
+}
+
 .assignee {
     width: 100%;
     display: flex;
-    gap: 10px;
     align-items: center;
-}
-
-.assignee > input {
-    flex: 1;
+    justify-content: space-between;
 }
 
 .list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    height: -webkit-fill-available;
+}
+
+.listItems {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 170px;
 }
 
 .addItem {
@@ -90,18 +99,18 @@
     padding: 10px;
     cursor: pointer;
     font-size: 16px;
+    width: fit-content;
 }
 
 .footer {
     width: 100%;
-    position: absolute;
     bottom: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.footer > * {
+.save, .cancel{
     border-radius: 12px;
     font-size: 1.2em;
     font-weight: 500;
@@ -111,18 +120,12 @@
     cursor: pointer;
 }
 
-.duedate {
-    border: 1px solid rgba(226, 226, 226, 1);
-    background-color: transparent;
-    color: rgba(112, 112, 112, 1);
-    margin-right: auto;
-}
-
 .cancel {
     border: 1px solid rgba(207, 54, 54, 1);
     background-color: transparent;
     color: rgba(207, 54, 54, 1);
     width: 150px;
+    margin-left: auto;
 }
 
 .save {
@@ -132,16 +135,16 @@
     width: 150px;
 }
 
-.form::-webkit-scrollbar {
+.listItems::-webkit-scrollbar {
     width: 10px;
 }
 
-.form::-webkit-scrollbar-track {
+.listItems::-webkit-scrollbar-track {
     background-color: transparent;
     border-radius: 10px;
 }
 
-.form::-webkit-scrollbar-thumb {
+.listItems::-webkit-scrollbar-thumb {
     background-color: rgba(156, 183, 197, 1);
     border-radius: 10px;
 }

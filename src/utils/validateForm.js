@@ -52,3 +52,31 @@ export default function validateForm({
     invalidFields,
   };
 }
+
+export function validateLogin({ email, password }) {
+  let isValid = true;
+  let invalidFields = {
+    email: false,
+    password: false,
+  };
+
+  if (!email || !password) {
+    isValid = false;
+    invalidFields = {
+      email: !email,
+      password: !password,
+    };
+  }
+
+  const emailRegEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const checkEmail = emailRegEx.test(email);
+  if (!checkEmail) {
+    isValid = false;
+    invalidFields = {
+      email: !checkEmail,
+      password: !password,
+    };
+  }
+
+  return { isValid, invalidFields };
+}

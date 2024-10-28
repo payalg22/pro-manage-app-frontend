@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import LandingArt from "../../components/LandingArt";
 import styles from "./login.module.css";
 import Form from "../../components/Form";
+import { validateLogin } from "../../utils/validateForm";
+import { login } from "../../../services/auth";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -15,24 +17,45 @@ export default function Login() {
     password: false,
   });
 
+  const [formError, setFormError] = useState("");
+
   useEffect(() => {
     setError({
       email: false,
       password: false,
     });
+    setFormError("");
   }, [formData]);
+
+  if (localStorage.getItem("token")) {
+    navigate("/dashboard");
+  }
 
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     console.log(formData);
-    const { email, password } = formData;
-
-    const emailRegEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    const checkEmail = emailRegEx.test(email);
-    if (!checkEmail) {
-      setError({ ...error, email: true });
+    const { isValid, invalidFields } = validateLogin(formData);
+    setError(invalidFields);
+    if (isValid) {
+      setError({
+        email: false,
+        password: false,
+      });
+      const res = await login(formData);
+      console.log(res);
+      try {
+        if (res?.status === 200) {
+          const token = res.data.token;
+          localStorage.setItem("token", token);
+          navigate("/dashboard");
+        } else {
+          setFormError(res.data.message);
+        }
+      } catch (error) {
+        setFormError(res.data.message);
+      }
     }
   }
 
@@ -52,7 +75,7 @@ export default function Login() {
     {
       type: "password",
       placeholder: "Password",
-      errorMsg: "Invalid user or password",
+      errorMsg: "Please enter password",
       isError: error.password,
       value: formData.password,
       onChange: (e) =>
@@ -70,6 +93,7 @@ export default function Login() {
       </div>
       <div className={styles.right}>
         <h2>Login</h2>
+        {formError && <p className={styles.error}>{formError}</p>}
         <Form fields={inputFields} onSubmit={handleSubmit} formType="Login" />
         <p className={styles.account}>Have no account yet?</p>
         <button className={styles.accbtn} onClick={() => navigate("/register")}>

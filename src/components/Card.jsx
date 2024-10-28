@@ -77,7 +77,7 @@ export default function Card({ task, onCollapse, isCollapsed }) {
           <MoreHorizOutlinedIcon onClick={handleMenu} />
           {isMenuOpen && (
             <ul className={styles.options}>
-              <EditTaskModal modalRef={modalRef} task={task} />
+              <EditTaskModal modalRef={modalRef} task={task} triggerEle={<li>Edit</li>} />
               <li>Share</li>
               <DeleteTaskModal modalRef={modalRef} />
             </ul>

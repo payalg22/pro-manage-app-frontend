@@ -4,8 +4,10 @@ import Popup from "reactjs-popup";
 import Priority from "./Priority";
 import ChecklistItem from "./ChecklistItem";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import DueDatePicker from "./DueDatePicker";
+import AssigneeList from "./AssigneeList";
 
-export default function EditTaskModal({ modalRef, task }) {
+export default function EditTaskModal({ triggerEle, modalRef, task }) {
   const [taskData, setTaskData] = useState({
     title: "",
     priority: "",
@@ -16,12 +18,19 @@ export default function EditTaskModal({ modalRef, task }) {
   const priorities = ["high", "moderate", "low"];
   const [list, setList] = useState();
 
+  useEffect(() => {
+    task && setTaskData(task);
+    setList(task?.checklist);
+  }, []);
+
   const handlePriority = (value) => {
     setTaskData({ ...taskData, priority: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    //TODO validation and submission
+    //Check if task id is present or not
   };
 
   const handleDeleteList = (index) => {
@@ -31,22 +40,32 @@ export default function EditTaskModal({ modalRef, task }) {
   };
 
   const handleAddList = () => {
-    const newList = [...list, ""];
+    const newList = list ? [...list, ""] : [""];
     setList(newList);
+  };
+
+  const handleDueDate = (date) => {
+    setTaskData({ ...taskData, duedate: date });
   };
 
   const handleClose = () => {
     setList();
-  }
+    setTaskData({
+      title: "",
+      priority: "",
+      assignee: "",
+      checklist: [],
+      duedate: null,
+    });
+  };
 
-  useEffect(() => {
-    task && setTaskData(task);
-    setList(task.checklist);
-  }, []);
+  const handleAssignee = (value) => {
+    setTaskData({ ...taskData, assignee: value });
+  };
 
   return (
     <Popup
-      trigger={<li>Edit</li>}
+      trigger={triggerEle}
       modal
       overlayStyle={{ background: "rgba(48, 61, 67, 0.55)" }}
       onClose={handleClose}
@@ -66,7 +85,6 @@ export default function EditTaskModal({ modalRef, task }) {
                   type="text"
                   className={styles.title}
                   value={taskData.title}
-                  required
                   onChange={(e) => {
                     setTaskData({ ...taskData, title: e.target.value });
                   }}
@@ -94,48 +112,47 @@ export default function EditTaskModal({ modalRef, task }) {
                 );
               })}
             </div>
-            <div>
-              <label className={styles.assignee}>
-                Assign to
-                <input
-                  type="text"
-                  value={taskData.assignee}
-                  onChange={(e) => {
-                    setTaskData({ ...taskData, assignee: e.target.value });
-                  }}
-                />
-              </label>
+            <div className={styles.assignee}>
+              Assign to
+              <AssigneeList
+                onChange={handleAssignee}
+                email={FormData?.assignee}
+              />
             </div>
             <div className={styles.list}>
               <p>
                 Checklist (1/3) <span className={styles.required}>*</span>
               </p>
-              {list?.map((item, index) => {
-                return (
-                  <ChecklistItem
-                    isDelete={true}
-                    item={item}
-                    key={index}
-                    index={index}
-                    handleDelete={handleDeleteList}
-                  />
-                );
-              })}
+              {list && (
+                <div className={styles.listItems}>
+                  {list.map((item, index) => {
+                    return (
+                      <ChecklistItem
+                        isDelete={true}
+                        item={item}
+                        key={index}
+                        index={index}
+                        handleDelete={handleDeleteList}
+                      />
+                    );
+                  })}
+                </div>
+              )}
               <div className={styles.addItem} onClick={handleAddList}>
                 <AddOutlinedIcon /> Add New
               </div>
-              <div className={styles.footer}>
-                <button className={styles.duedate}>Select Due Date</button>
-                <button
-                  className={styles.cancel}
-                  onClick={() => {
-                    close();
-                  }}
-                >
-                  Cancel
-                </button>
-                <input type="submit" value="Save" className={styles.save} />
-              </div>
+            </div>
+            <div className={styles.footer}>
+              <DueDatePicker due={taskData?.duedate} onChange={handleDueDate} />
+              <button
+                className={styles.cancel}
+                onClick={() => {
+                  close();
+                }}
+              >
+                Cancel
+              </button>
+              <input type="submit" value="Save" className={styles.save} />
             </div>
           </form>
         </div>
