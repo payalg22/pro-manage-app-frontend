@@ -4,20 +4,20 @@ import LandingArt from "../../components/LandingArt";
 import styles from "./login.module.css";
 import Form from "../../components/Form";
 import { validateLogin } from "../../utils/validateForm";
-import { login } from "../../../services/auth";
+import { login } from "../../services/auth";
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
   const [error, setError] = useState({
     email: false,
     password: false,
   });
-
   const [formError, setFormError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setError({
@@ -30,8 +30,6 @@ export default function Login() {
   if (localStorage.getItem("token")) {
     navigate("/dashboard");
   }
-
-  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();

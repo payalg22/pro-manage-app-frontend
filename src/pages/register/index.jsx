@@ -4,7 +4,7 @@ import LandingArt from "../../components/LandingArt";
 import styles from "../login/login.module.css";
 import Form from "../../components/Form";
 import validateForm from "../../utils/validateForm";
-import { register } from "../../../services/auth";
+import { register } from "../../services/auth";
 
 export default function Register() {
   const [formData, setFormData] = useState({

@@ -12,6 +12,7 @@ export default function LogOutModal() {
     //TODO clear jwt from localstorage and context
     console.log("user logged out");
     navigate("/login");
+    localStorage.removeItem("token");
   };
 
   return (

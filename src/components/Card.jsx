@@ -84,7 +84,7 @@ export default function Card({ task, onCollapse, isCollapsed }) {
           )}
         </div>
       </div>
-      <p className={styles.title}>Task title goes here</p>
+      <p className={styles.title}>{task.title}</p>
       <div className={styles.chklistContainer}>
         <div className={styles.chklistHeader}>
           <p>Checklist (0/{checklist.length})</p>
