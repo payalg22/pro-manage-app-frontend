@@ -1,41 +1,89 @@
 .container {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    justify-content: start;
-    align-items: center;
-    flex-direction: column;
-    font-family: Poppins;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  font-family: Poppins;
+}
+
+.loading {
+  height: 100%;
+  font-family: Poppins;
+  font-size: 1.5em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: rgba(67, 145, 237, 0.1);
+  color: rgba(112, 112, 112, 1);
 }
 
 .header {
-    width: 100%;
+  width: 100%;
 }
 
 .logo {
-    font-family: Poppins;
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-    font-weight: 700;
-    margin: 10px 20px;
+  font-family: Poppins;
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  font-weight: 700;
+  margin: 10px 20px;
 }
 
 .logo p {
-    margin: 15px 10px;
+  margin: 15px 10px;
 }
 
 .card {
-    border: 2px solid rgba(237, 245, 254, 1);
-    border-radius: 12px;
-    width: 40%;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    box-sizing: border-box;
+  border: 2px solid rgba(237, 245, 254, 1);
+  border-radius: 12px;
+  width: 40%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 10px;
+  box-sizing: border-box;
 }
 
 .card > * {
-    width: 90%;
+  width: 90%;
+}
+
+.checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 10px 0;
+    max-width: 600px;
+    overflow-y: auto;
+}
+
+.checklist::-webkit-scrollbar {
+    width: 10px;
+}
+
+.checklist::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.checklist::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 183, 197, 1);
+    border-radius: 10px;
+}
+
+.duedate {
+    font-family: Poppins;
+    font-weight: 500;
+}
+
+.duedate > span {
+    padding: 10px;
+    color: white;
+    background-color: (207, 54, 54, 1);
+    border-radius: 8px;
 }

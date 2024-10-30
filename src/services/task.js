@@ -4,7 +4,7 @@ const url = import.meta.env.VITE_API_BASE_URL;
 const token = localStorage.getItem("token");
 
 export async function taskFilter(filter) {
-    console.log(token);
+  console.log(token);
   try {
     const response = await axios.get(
       `http://localhost:5000/api/v1/task/user/${filter}`,
@@ -21,3 +21,20 @@ export async function taskFilter(filter) {
     return error.response;
   }
 }
+
+export const getSharedTask = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/v1/task/specific/${id}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+};

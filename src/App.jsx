@@ -20,7 +20,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/analytics" element={<Analytics />} />
-          <Route path="/sharedtask" element={<SharedTask />} />
+          <Route path="/sharedtask/:id" element={<SharedTask />} />
         </Routes>
       </BrowserRouter>
     </>

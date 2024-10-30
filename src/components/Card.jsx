@@ -10,7 +10,7 @@ import DeleteTaskModal from "./DeleteTaskModal";
 import EditTaskModal from "./EditTaskModal";
 
 export default function Card({ task, onCollapse, isCollapsed }) {
-  const { checklist, priority, duedate, category } = task;
+  const { checklist, priority, duedate, category, _id } = task;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [categoryList, setCategoryList] = useState([
@@ -67,6 +67,15 @@ export default function Card({ task, onCollapse, isCollapsed }) {
     console.log(nCategory);
   };
 
+  const handleShare = () => {
+    //TODO toast notification
+    const base = window.location.origin;
+    const link = `${base}/sharedtask/${_id}`;
+    navigator.clipboard.writeText(link);
+    console.log("Link copied successfully");
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -77,8 +86,12 @@ export default function Card({ task, onCollapse, isCollapsed }) {
           <MoreHorizOutlinedIcon onClick={handleMenu} />
           {isMenuOpen && (
             <ul className={styles.options}>
-              <EditTaskModal modalRef={modalRef} task={task} triggerEle={<li>Edit</li>} />
-              <li>Share</li>
+              <EditTaskModal
+                modalRef={modalRef}
+                task={task}
+                triggerEle={<li>Edit</li>}
+              />
+              <li onClick={handleShare}>Share</li>
               <DeleteTaskModal modalRef={modalRef} />
             </ul>
           )}

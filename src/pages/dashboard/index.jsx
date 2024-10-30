@@ -3,11 +3,14 @@ import styles from "./dashboard.module.css";
 import Panel from "../../components/Panel";
 import Category from "../../components/Category";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import PendingIcon from "@mui/icons-material/Pending";
 import { getToday } from "../../utils/getDates";
 import AddMemberModal from "../../components/AddMemberModal";
 import { taskFilter } from "../../services/task";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("This Week");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [category, setCategory] = useState([
@@ -16,7 +19,7 @@ export default function Dashboard() {
     { name: "In Progress", tasks: [] },
     { name: "Done", tasks: [] },
   ]);
-
+  const navigate = useNavigate();
   const menuRef = useRef(null);
   const filters = [" Today", "This Week", "This Month"];
 
@@ -37,20 +40,28 @@ export default function Dashboard() {
     const getTasks = async () => {
       const selectedFilter = filter?.split(" ")[1]?.toLowerCase();
       const res = await taskFilter(selectedFilter);
-      console.log(res.data);
-
-      return res.data;
+      console.log(res);
+      if (res.status === 200) {
+        return res.data;
+      }
+      return false;
     };
 
     getTasks().then((tasks) => {
-      const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = tasks;
-      console.log(toDoTasks);
-      setCategory([
-        { name: "Backlog", tasks: backlogTasks },
-        { name: "To Do", tasks: toDoTasks },
-        { name: "In Progress", tasks: inProgressTasks },
-        { name: "Done", tasks: doneTasks },
-      ]);
+      if (tasks) {
+        const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = tasks;
+        console.log(toDoTasks);
+        setCategory([
+          { name: "Backlog", tasks: backlogTasks },
+          { name: "To Do", tasks: toDoTasks },
+          { name: "In Progress", tasks: inProgressTasks },
+          { name: "Done", tasks: doneTasks },
+        ]);
+        setIsLoading(false);
+      } else {
+        // navigate("/");
+        console.log(tasks);
+      }
     });
     // const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = getTasks();
   }, [filter]);
@@ -112,51 +123,61 @@ export default function Dashboard() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.left}>
-        <Panel option="dashboard" />
-      </div>
-      <div className={styles.right}>
-        <div className={styles.welcome}>Welcome! Payal</div>
-        <div>
-          <p className={styles.date}>{getToday()}</p>
+    <>
+      {isLoading ? (
+        <div className={styles.loading}>
+          <PendingIcon />
+          <p>Loading </p>
         </div>
-        <div className={styles.header}>
-          <p>Board</p>
-          <AddMemberModal />
-          <div className={styles.menu} ref={menuRef}>
-            <span onClick={handleMenu} className={styles.filter}>
-              {filter}
-              <KeyboardArrowDownOutlinedIcon />
-            </span>
-            {isMenuOpen && (
-              <ul className={styles.options}>
-                {filters.map((selection, index) => {
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => {
-                        handleSelection(selection);
-                      }}
-                    >
-                      {selection}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+      ) : (
+        <div className={styles.container}>
+          (
+          <div className={styles.left}>
+            <Panel option="dashboard" />
+          </div>
+          <div className={styles.right}>
+            <div className={styles.welcome}>Welcome! Payal</div>
+            <div>
+              <p className={styles.date}>{getToday()}</p>
+            </div>
+            <div className={styles.header}>
+              <p>Board</p>
+              <AddMemberModal />
+              <div className={styles.menu} ref={menuRef}>
+                <span onClick={handleMenu} className={styles.filter}>
+                  {filter}
+                  <KeyboardArrowDownOutlinedIcon />
+                </span>
+                {isMenuOpen && (
+                  <ul className={styles.options}>
+                    {filters.map((selection, index) => {
+                      return (
+                        <li
+                          key={index}
+                          onClick={() => {
+                            handleSelection(selection);
+                          }}
+                        >
+                          {selection}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </div>
+            <div className={styles.body}>
+              {category.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <Category category={item.name} tasks={item.tasks} />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-        <div className={styles.body}>
-          {category.map((item, index) => {
-            return (
-              <div key={index}>
-                <Category category={item.name} tasks={item.tasks} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
