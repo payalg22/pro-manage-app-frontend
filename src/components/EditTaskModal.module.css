@@ -31,6 +31,7 @@
 .required {
     color: rgba(255, 0, 0, 1);
     font-weight: 500;
+    margin-right: 10px;
 }
 
 .title {
@@ -81,6 +82,12 @@
     flex-direction: column;
     gap: 10px;
     height: -webkit-fill-available;
+}
+
+.error {
+    color: rgba(219, 55, 31, 1);
+    font-family: Inter;
+    font-weight: 400;
 }
 
 .listItems {

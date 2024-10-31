@@ -7,6 +7,7 @@ import EditTaskModal from "./EditTaskModal";
 
 export default function Category({ category, tasks }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const isTodo = () => category.trim() === "To Do";
 
   const handleCollapse = (value) => {
     setIsCollapsed(value);
@@ -17,9 +18,7 @@ export default function Category({ category, tasks }) {
       <div className={styles.header}>
         {category}
         <span className={styles.utility}>
-          {category === "To do" && (
-            <EditTaskModal triggerEle={<AddOutlinedIcon />} />
-          )}
+          {isTodo() && <EditTaskModal triggerEle={<AddOutlinedIcon />} />}
           <img src={collapseIcon} onClick={() => handleCollapse(true)} />
         </span>
       </div>

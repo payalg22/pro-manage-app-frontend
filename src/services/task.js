@@ -38,3 +38,23 @@ export const getSharedTask = async (id) => {
     return error.response;
   }
 };
+
+export const postNewTask = async (task) => {
+  const data = JSON.stringify(task);
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/api/v1/task/new`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+};

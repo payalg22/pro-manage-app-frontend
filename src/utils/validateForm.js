@@ -80,3 +80,22 @@ export function validateLogin({ email, password }) {
 
   return { isValid, invalidFields };
 }
+
+export function validateTask({ title, checklist, priority }) {
+  let isValid = true;
+  let invalidFields = {
+    title: false,
+    priority: false,
+    checklist: false,
+  };
+  if (!checklist?.length || !title || !priority) {
+    invalidFields = {
+      checklist: !checklist?.length,
+      title: !title,
+      priority: !priority,
+    };
+    isValid = false;
+  }
+
+  return { isValid, invalidFields };
+}

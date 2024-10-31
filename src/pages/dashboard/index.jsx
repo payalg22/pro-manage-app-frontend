@@ -131,7 +131,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className={styles.container}>
-          (
           <div className={styles.left}>
             <Panel option="dashboard" />
           </div>
