@@ -1,18 +1,20 @@
 import { createContext, useState } from "react";
 
-export const AppContext = createContext();
+const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [user, setUser] = useState("");
 
   return (
     <AppContext.Provider
       value={{
-        isCollapsed,
-        setIsCollapsed,
+        user,
+        setUser
       }}
     >
       {children}
     </AppContext.Provider>
   );
 };
+
+export default AppContext;

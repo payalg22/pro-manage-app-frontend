@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import styles from "./dashboard.module.css";
 import Panel from "../../components/Panel";
 import Category from "../../components/Category";
@@ -7,7 +7,9 @@ import PendingIcon from "@mui/icons-material/Pending";
 import { getToday } from "../../utils/getDates";
 import AddMemberModal from "../../components/AddMemberModal";
 import { taskFilter } from "../../services/task";
-import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AppContext from "../../context/AppContext";
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,9 +21,10 @@ export default function Dashboard() {
     { name: "In Progress", tasks: [] },
     { name: "Done", tasks: [] },
   ]);
-  const navigate = useNavigate();
   const menuRef = useRef(null);
   const filters = [" Today", "This Week", "This Month"];
+  const [pageRefresh, setPageRefresh] = useState(true);
+  const {user} = useContext(AppContext);
 
   useEffect(() => {
     function handleMenuClose(e) {
@@ -37,81 +40,53 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    const getTasks = async () => {
-      const selectedFilter = filter?.split(" ")[1]?.toLowerCase();
-      const res = await taskFilter(selectedFilter);
-      console.log(res);
-      if (res.status === 200) {
-        return res.data;
-      }
-      return false;
-    };
+    if (pageRefresh) {
+      getTasks().then((tasks) => {
+        if (tasks) {
+          const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = tasks;
+          console.log(toDoTasks);
+          setCategory([
+            { name: "Backlog", tasks: backlogTasks },
+            { name: "To Do", tasks: toDoTasks },
+            { name: "In Progress", tasks: inProgressTasks },
+            { name: "Done", tasks: doneTasks },
+          ]);
+          setIsLoading(false);
+        } else {
+          // navigate("/");
+          console.log(tasks);
+        }
+      });
+      setPageRefresh(false);
+    }
+  }, [pageRefresh]);
 
-    getTasks().then((tasks) => {
-      if (tasks) {
-        const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = tasks;
-        console.log(toDoTasks);
-        setCategory([
-          { name: "Backlog", tasks: backlogTasks },
-          { name: "To Do", tasks: toDoTasks },
-          { name: "In Progress", tasks: inProgressTasks },
-          { name: "Done", tasks: doneTasks },
-        ]);
-        setIsLoading(false);
-      } else {
-        // navigate("/");
-        console.log(tasks);
-      }
+  const notify = (msg) => {
+    toast(`${msg}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
     });
-    // const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = getTasks();
-  }, [filter]);
+  };
 
-  //   const category = [
-  //     {
-  //       name: "Backlog",
-  //       tasks: [
-  //         {
-  //           title: "Task no 1",
-  //           priority: "low",
-  //           checklist: ["item1", "item2"],
-  //           duedate: "2024/10/26",
-  //           category: "backlog",
-  //         },
-  //         {
-  //           priority: "high",
-  //           checklist: ["item1", "item2"],
-  //           duedate: "2024/10/22",
-  //           category: "backlog",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       name: "In progress",
-  //       tasks: [],
-  //     },
-  //     {
-  //       name: "To do",
-  //       tasks: [
-  //         {
-  //           priority: "low",
-  //           checklist: ["item1", "item2"],
-  //           duedate: "2024/10/29",
-  //           category: "to-do",
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       name: "Done",
-  //       tasks: [],
-  //     },
-  //   ];
+  const getTasks = async () => {
+    const selectedFilter = filter?.split(" ")[1]?.toLowerCase();
+    const res = await taskFilter(selectedFilter);
+    console.log(res);
+    if (res?.status === 200) {
+      return res.data;
+    }
+    return false;
+  };
 
-  //   const category = [
-  //     { name: "Backlog", tasks: [] },
-  //     { name: "To Do", tasks: [] },
-  //     { name: "In Progress", tasks: [] },
-  //     { name: "Done", tasks: [] },
-  //   ];
+  const handleRefresh = (val) => {
+    setPageRefresh(val);
+  };
 
   const handleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -120,6 +95,7 @@ export default function Dashboard() {
   const handleSelection = (value) => {
     setFilter(value);
     handleMenu();
+    setPageRefresh(true);
   };
 
   return (
@@ -135,7 +111,8 @@ export default function Dashboard() {
             <Panel option="dashboard" />
           </div>
           <div className={styles.right}>
-            <div className={styles.welcome}>Welcome! Payal</div>
+          <ToastContainer />
+            <div className={styles.welcome}>Welcome! {user}</div>
             <div>
               <p className={styles.date}>{getToday()}</p>
             </div>
@@ -169,7 +146,12 @@ export default function Dashboard() {
               {category.map((item, index) => {
                 return (
                   <div key={index}>
-                    <Category category={item.name} tasks={item.tasks} />
+                    <Category
+                      category={item.name}
+                      tasks={item.tasks}
+                      pageRefresh={handleRefresh}
+                      toast={notify}
+                    />
                   </div>
                 );
               })}

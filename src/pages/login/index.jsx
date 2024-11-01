@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import LandingArt from "../../components/LandingArt";
 import styles from "./login.module.css";
 import Form from "../../components/Form";
 import { validateLogin } from "../../utils/validateForm";
 import { login } from "../../services/auth";
+import AppContext from "../../context/AppContext";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function Login() {
     password: false,
   });
   const [formError, setFormError] = useState("");
+  const { setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -46,6 +48,8 @@ export default function Login() {
       try {
         if (res?.status === 200) {
           const token = res.data.token;
+          const user = res.data.user;
+          setUser(user);
           localStorage.setItem("token", token);
           navigate("/dashboard");
         } else {

@@ -3,11 +3,7 @@ import styles from "./DeleteTaskModal.module.css";
 import Popup from "reactjs-popup";
 import BasicModal from "./BasicModal";
 
-export default function DeleteTaskModal({ modalRef }) {
-  const handleDelete = () => {
-    //TODO delete task
-  };
-
+export default function DeleteTaskModal({ modalRef, onDelete }) {
   return (
     <Popup
       trigger={<span className={styles.delete}>Delete</span>}
@@ -16,11 +12,7 @@ export default function DeleteTaskModal({ modalRef }) {
     >
       {(close) => (
         <div ref={modalRef} className={styles.parent}>
-          <BasicModal
-            modalFor="Delete"
-            close={close}
-            handleAction={handleDelete}
-          />
+          <BasicModal close={close} modalFor="Delete" handleAction={onDelete} />
         </div>
       )}
     </Popup>

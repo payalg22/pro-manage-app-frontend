@@ -4,7 +4,6 @@ const url = import.meta.env.VITE_API_BASE_URL;
 const token = localStorage.getItem("token");
 
 export async function taskFilter(filter) {
-  console.log(token);
   try {
     const response = await axios.get(
       `http://localhost:5000/api/v1/task/user/${filter}`,
@@ -58,3 +57,56 @@ export const postNewTask = async (task) => {
     return error.response;
   }
 };
+
+export const deleteTask = async (id) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:5000/api/v1/task/${id}`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+};
+
+export const changeCategory = async (id, category) => {
+  try {
+    const response = await axios.patch(
+      `http://localhost:5000/api/v1/task/edit/${id}/${category}`,
+      [],
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: token,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+};
+
+export const getAnalytics = async () => {
+    try {
+        const response = await axios.get(
+          `http://localhost:5000/api/v1/task/analytics/all`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log(error);
+        return error.response;
+      }
+}

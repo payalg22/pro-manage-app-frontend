@@ -8,8 +8,9 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { formatDueDate, isPastDue } from "../utils/getDates";
 import DeleteTaskModal from "./DeleteTaskModal";
 import EditTaskModal from "./EditTaskModal";
+import { changeCategory, deleteTask } from "../services/task";
 
-export default function Card({ task, onCollapse, isCollapsed }) {
+export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast }) {
   const { checklist, priority, duedate, category, _id } = task;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -22,6 +23,11 @@ export default function Card({ task, onCollapse, isCollapsed }) {
   const [isPastDueDate, setIsPastDueDate] = useState(false);
   const menuRef = useRef(null);
   const modalRef = useRef(null);
+  const [checkedItems, setCheckedItems] = useState(() => {
+    const checked = task?.checklist?.filter((item) => item.completed === true);
+    console.log(checked);
+    return checked?.length || 0;
+  });
 
   useEffect(() => {
     isCollapsed && setIsExpanded(false);
@@ -62,9 +68,11 @@ export default function Card({ task, onCollapse, isCollapsed }) {
     !isExpanded && onCollapse(false);
   };
 
-  const handleCategory = (nCategory) => {
-    //TODO change category
+  const handleCategory = async (nCategory) => {
     console.log(nCategory);
+    const res = await changeCategory(_id, nCategory);
+    console.log(res);
+    pageRefresh(true);
   };
 
   const handleShare = () => {
@@ -74,6 +82,19 @@ export default function Card({ task, onCollapse, isCollapsed }) {
     navigator.clipboard.writeText(link);
     console.log("Link copied successfully");
     setIsMenuOpen(false);
+    toast("Link Copied");
+  };
+
+  const handleDelete = async () => {
+    const res = await deleteTask(_id);
+    console.log(res);
+    if(res.status === 200) {
+        console.log("toast: task delted");
+    } else {
+        console.log("toast: Couldn't delete task");
+    }
+    setIsMenuOpen(false);
+    pageRefresh(true);
   };
 
   return (
@@ -92,7 +113,7 @@ export default function Card({ task, onCollapse, isCollapsed }) {
                 triggerEle={<li>Edit</li>}
               />
               <li onClick={handleShare}>Share</li>
-              <DeleteTaskModal modalRef={modalRef} />
+              <DeleteTaskModal modalRef={modalRef} onDelete={handleDelete} />
             </ul>
           )}
         </div>
@@ -100,7 +121,9 @@ export default function Card({ task, onCollapse, isCollapsed }) {
       <p className={styles.title}>{task.title}</p>
       <div className={styles.chklistContainer}>
         <div className={styles.chklistHeader}>
-          <p>Checklist (0/{checklist.length})</p>
+          <p>
+            Checklist ({checkedItems}/{checklist.length})
+          </p>
           <span className={styles.expand} onClick={handleExpansion}>
             {isExpanded ? (
               <KeyboardArrowUpOutlinedIcon />

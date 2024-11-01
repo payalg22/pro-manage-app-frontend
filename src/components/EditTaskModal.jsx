@@ -7,9 +7,13 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DueDatePicker from "./DueDatePicker";
 import AssigneeList from "./AssigneeList";
 import { validateTask } from "../utils/validateForm";
-import { postNewTask } from "../services/task";
 
-export default function EditTaskModal({ triggerEle, modalRef, task }) {
+export default function EditTaskModal({
+  triggerEle,
+  modalRef,
+  task,
+  saveTask,
+}) {
   const [taskData, setTaskData] = useState({
     title: task?.title || "",
     priority: task?.priority || "",
@@ -24,6 +28,11 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
     priority: false,
     checklist: false,
   });
+  const [checkedItems, setCheckedItems] = useState(() => {
+    const checked = task?.checklist?.filter((item) => item.completed === true);
+    console.log(checked);
+    return checked?.length || 0;
+  });
 
   useEffect(() => {
     const checkList = list?.filter((item) => item.content !== "");
@@ -36,17 +45,15 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(taskData);
     const { isValid, invalidFields } = validateTask(taskData);
-    console.log(invalidFields);
-    setIsError(invalidFields);
-
-    if (isValid) {
-      console.log(taskData);
-      const res = await postNewTask(taskData);
-      console.log(res);
-
+    if (!isValid) {
+      console.log(invalidFields);
+      setIsError(invalidFields);
+      return;
     }
+    saveTask(taskData);
+    handleClose();
   };
 
   const handleDeleteList = (index) => {
@@ -58,7 +65,7 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
 
   const handleAddList = () => {
     if (!list || list.slice(-1)[0].content !== "") {
-      const item = { content: "", completed: false };
+      const item = { content: "", completed: false, _id:list?.length + 10 + "newtask" };
       const newList = list ? [...list, item] : [item];
       setList(newList);
     }
@@ -71,7 +78,8 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
   };
 
   const handleDueDate = (date) => {
-    setTaskData({ ...taskData, duedate: date });
+    const due = new Date(date);
+    setTaskData({ ...taskData, duedate: due });
   };
 
   const handleClose = () => {
@@ -107,6 +115,7 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
             className={styles.form}
             onSubmit={(e) => {
               handleSubmit(e);
+              close();
             }}
           >
             <div>
@@ -162,7 +171,7 @@ export default function EditTaskModal({ triggerEle, modalRef, task }) {
             </div>
             <div className={styles.list}>
               <p>
-                Checklist (1/{list?.length || "0"}){" "}
+                Checklist ({checkedItems}/{list?.length || "0"}){" "}
                 <span className={styles.required}>*</span>
                 {isError?.checklist && (
                   <span className={styles.error}>

@@ -4,8 +4,9 @@ import collapseIcon from "../assets/collapseIcon.png";
 import Card from "./Card";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import EditTaskModal from "./EditTaskModal";
+import { postNewTask } from "../services/task";
 
-export default function Category({ category, tasks }) {
+export default function Category({ category, tasks, pageRefresh, toast }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const isTodo = () => category.trim() === "To Do";
 
@@ -13,12 +14,24 @@ export default function Category({ category, tasks }) {
     setIsCollapsed(value);
   };
 
+  const handleNewTask = async (taskData) => {
+    console.log(taskData);
+    const res = await postNewTask(taskData);
+    console.log(res);
+    if (res.status !== 201) {
+      console.log("show toast: error creating task.Please try again");
+      return;
+    }
+    pageRefresh(true);
+    return;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         {category}
         <span className={styles.utility}>
-          {isTodo() && <EditTaskModal triggerEle={<AddOutlinedIcon />} />}
+          {isTodo() && <EditTaskModal triggerEle={<AddOutlinedIcon />} saveTask={handleNewTask} />}
           <img src={collapseIcon} onClick={() => handleCollapse(true)} />
         </span>
       </div>
@@ -30,6 +43,8 @@ export default function Category({ category, tasks }) {
               key={index}
               onCollapse={handleCollapse}
               isCollapsed={isCollapsed}
+              pageRefresh={pageRefresh}
+              toast={toast}
             />
           );
         })}
