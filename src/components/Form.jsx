@@ -5,8 +5,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { formIcons } from "../data/formIcons.jsx";
 
 function FormField({ field }) {
-  const { type, placeholder, errorMsg, isError, value, onChange } =
-    field;
+  const { type, placeholder, errorMsg, isError, value, onChange } = field;
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState();
 
@@ -58,7 +57,13 @@ function FormField({ field }) {
 
 export default function Form({ fields, onSubmit, formType }) {
   return (
-    <form className={styles.form} onSubmit={(e) => onSubmit(e)}>
+    <form
+      className={styles.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(e);
+      }}
+    >
       {fields.map((field, index) => {
         return <FormField key={index} field={field} />;
       })}

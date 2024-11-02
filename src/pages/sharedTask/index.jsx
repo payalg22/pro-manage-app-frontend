@@ -12,21 +12,31 @@ export default function SharedTask() {
   const { id } = useParams();
   const [task, setTask] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isChecked, setIsChecked] = useState(0);
 
   useEffect(() => {
     getSharedTask(id).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         setIsLoading(false);
         const task = res.data.getTask;
         if (task.duedate) {
           task.duedate = formatDueDate(task.duedate);
         }
+        const checkedItems = task?.checklist.filter(
+          (item) => item.completed === true
+        );
+        setIsChecked(checkedItems?.length || 0);
         setTask(task);
-        console.log(res.data);
       }
     });
   }, []);
+
+  //To locally handle checked list items
+  const handleCheckedItems = (value, index) => {
+    setIsChecked((prev) => {
+      return value ? prev + 1 : prev - 1;
+    });
+  };
 
   return (
     <>
@@ -51,11 +61,18 @@ export default function SharedTask() {
               <h2>{task.title}</h2>
             </div>
             <div>
-              <p>Checklist (0/{task?.checklist.length})</p>
+              <p>
+                Checklist ({isChecked}/{task?.checklist.length})
+              </p>
               <div className={styles.checklist}>
                 {task?.checklist?.map((item, index) => {
                   return (
-                    <ChecklistItem key={index} item={item} isDelete={false} />
+                    <ChecklistItem
+                      key={index}
+                      item={item}
+                      isDelete={false}
+                      handleIsChecked={handleCheckedItems}
+                    />
                   );
                 })}
               </div>

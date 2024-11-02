@@ -35,7 +35,6 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(formData);
     const { isValid, invalidFields } = validateLogin(formData);
     setError(invalidFields);
     if (isValid) {
@@ -44,19 +43,21 @@ export default function Login() {
         password: false,
       });
       const res = await login(formData);
-      console.log(res);
       try {
         if (res?.status === 200) {
-          const token = res.data.token;
-          const user = res.data.user;
+          const token = await res.data.token;
+          const user = await res.data.user;
           setUser(user);
           localStorage.setItem("token", token);
-          navigate("/dashboard");
+          localStorage.setItem("username", user);
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 5000);
         } else {
           setFormError(res.data.message);
         }
       } catch (error) {
-        setFormError(res.data.message);
+        setFormError(res?.data?.message);
       }
     }
   }

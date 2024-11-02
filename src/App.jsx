@@ -7,6 +7,7 @@ import {
   Settings,
   Analytics,
   SharedTask,
+  NotFound,
 } from "./pages/index";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/sharedtask/:id" element={<SharedTask />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>

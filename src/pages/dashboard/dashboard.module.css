@@ -114,3 +114,34 @@
     background-color: hsla(200, 26%, 69%, 1);
     border-radius: 10px;
 }
+
+
+@media (min-width: 900px) and (max-width: 1024px) {
+    .right {
+        width: 75%;
+    }
+
+    .left {
+        width: 25%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+    .right {
+        width: 70%;
+    }
+
+    .left {
+        width: 30%;
+    }
+}
+
+@media (max-width: 768px) {
+    .right {
+        width: 65%;
+    }
+
+    .left {
+        width: 35%;
+    }
+}

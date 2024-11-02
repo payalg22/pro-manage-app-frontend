@@ -2,17 +2,13 @@ import React from "react";
 import styles from "./LogOutModal.module.css";
 import Popup from "reactjs-popup";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { useNavigate } from "react-router-dom";
 import BasicModal from "./BasicModal";
 
 export default function LogOutModal() {
-  const navigate = useNavigate();
-
   const handleLogout = () => {
-    //TODO clear jwt from localstorage and context
-    console.log("user logged out");
-    navigate("/login");
+    window.location.href = "/login";
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
   };
 
   return (

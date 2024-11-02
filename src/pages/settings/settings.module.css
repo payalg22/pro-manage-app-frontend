@@ -13,3 +13,42 @@
 .right {
     width: 40%;
 }
+.error {
+    color: rgba(219, 55, 31, 1);
+    padding: 10px;
+    border: 1px solid rgba(219, 55, 31, 1);
+    border-radius: 8px;
+    width: 70%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+@media (min-width: 900px) and (max-width: 1024px) {
+    .right {
+        width: 50%;
+    }
+
+    .left{
+        width: 25%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+    .right {
+        width: 60%;
+    }
+
+    .left{
+        width: 30%;
+    }
+}
+
+@media (max-width: 768px) {
+    .right {
+        width: 75%;
+    }
+    
+    .left{
+        width: 35%;
+    }
+}

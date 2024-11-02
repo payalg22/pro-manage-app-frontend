@@ -61,10 +61,12 @@
     margin: 10px 0;
     max-width: 600px;
     overflow-y: auto;
+    padding-bottom: 10px;
 }
 
 .checklist::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
 }
 
 .checklist::-webkit-scrollbar-track {
@@ -82,8 +84,27 @@
 }
 
 .duedate > span {
-    padding: 10px;
+    padding: 5px 10px;
     color: white;
-    background-color: (207, 54, 54, 1);
+    background-color: rgba(207, 54, 54, 1);
     border-radius: 8px;
+    margin-left: 10px;
+}
+
+@media (min-width: 520px) and (max-width: 768px) {
+    .card {
+        width: 60%;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 520px) {
+    .card {
+        width: 70%;
+    }
+}
+
+@media (max-width: 425px) {
+    .card {
+        width: 90%;
+    }
 }

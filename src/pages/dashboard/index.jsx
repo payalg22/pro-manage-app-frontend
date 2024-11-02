@@ -24,7 +24,7 @@ export default function Dashboard() {
   const menuRef = useRef(null);
   const filters = [" Today", "This Week", "This Month"];
   const [pageRefresh, setPageRefresh] = useState(true);
-  const {user} = useContext(AppContext);
+  const { user } = useContext(AppContext);
 
   useEffect(() => {
     function handleMenuClose(e) {
@@ -44,7 +44,6 @@ export default function Dashboard() {
       getTasks().then((tasks) => {
         if (tasks) {
           const { backlogTasks, doneTasks, inProgressTasks, toDoTasks } = tasks;
-          console.log(toDoTasks);
           setCategory([
             { name: "Backlog", tasks: backlogTasks },
             { name: "To Do", tasks: toDoTasks },
@@ -52,9 +51,6 @@ export default function Dashboard() {
             { name: "Done", tasks: doneTasks },
           ]);
           setIsLoading(false);
-        } else {
-          // navigate("/");
-          console.log(tasks);
         }
       });
       setPageRefresh(false);
@@ -77,7 +73,6 @@ export default function Dashboard() {
   const getTasks = async () => {
     const selectedFilter = filter?.split(" ")[1]?.toLowerCase();
     const res = await taskFilter(selectedFilter);
-    console.log(res);
     if (res?.status === 200) {
       return res.data;
     }
@@ -111,14 +106,14 @@ export default function Dashboard() {
             <Panel option="dashboard" />
           </div>
           <div className={styles.right}>
-          <ToastContainer />
+            <ToastContainer />
             <div className={styles.welcome}>Welcome! {user}</div>
             <div>
               <p className={styles.date}>{getToday()}</p>
             </div>
             <div className={styles.header}>
               <p>Board</p>
-              <AddMemberModal />
+              <AddMemberModal pageRefresh={handleRefresh} toast={notify} />
               <div className={styles.menu} ref={menuRef}>
                 <span onClick={handleMenu} className={styles.filter}>
                   {filter}

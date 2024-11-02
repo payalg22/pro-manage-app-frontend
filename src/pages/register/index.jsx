@@ -47,7 +47,6 @@ export default function Register() {
         confirmPassword: false,
       });
       const res = await register(formData);
-      console.log(res);
       try {
         if (res?.status === 201) {
           navigate("/login");

@@ -1,9 +1,9 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(localStorage.getItem("username") || "");
 
   return (
     <AppContext.Provider

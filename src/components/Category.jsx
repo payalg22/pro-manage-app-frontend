@@ -15,23 +15,27 @@ export default function Category({ category, tasks, pageRefresh, toast }) {
   };
 
   const handleNewTask = async (taskData) => {
-    console.log(taskData);
     const res = await postNewTask(taskData);
-    console.log(res);
     if (res.status !== 201) {
-      console.log("show toast: error creating task.Please try again");
+      toast("Something went wrong");
       return;
     }
+    toast("Task Created");
     pageRefresh(true);
     return;
-  }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         {category}
         <span className={styles.utility}>
-          {isTodo() && <EditTaskModal triggerEle={<AddOutlinedIcon />} saveTask={handleNewTask} />}
+          {isTodo() && (
+            <EditTaskModal
+              triggerEle={<AddOutlinedIcon />}
+              saveTask={handleNewTask}
+            />
+          )}
           <img src={collapseIcon} onClick={() => handleCollapse(true)} />
         </span>
       </div>

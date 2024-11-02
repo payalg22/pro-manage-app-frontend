@@ -5,7 +5,7 @@ const url = import.meta.env.VITE_API_BASE_URL;
 export async function register(data) {
   try {
     const response = await axios.post(
-      `http://localhost:5000/api/v1/user/register`,
+      `${url}/api/v1/user/register`,
       data,
       {
         headers: {
@@ -15,7 +15,6 @@ export async function register(data) {
     );
     return response;
   } catch (error) {
-    console.log(error);
     return error.response;
   }
 }
@@ -23,7 +22,7 @@ export async function register(data) {
 export async function login(data) {
   try {
     const response = await axios.post(
-      `http://localhost:5000/api/v1/user/login`,
+      `${url}/api/v1/user/login`,
       data,
       {
         headers: {
@@ -33,7 +32,6 @@ export async function login(data) {
     );
     return response;
   } catch (error) {
-    console.log(error);
     return error.response;
   }
 }

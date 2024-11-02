@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./EditTaskModal.module.css";
 import Popup from "reactjs-popup";
 import Priority from "./Priority";
@@ -30,13 +30,22 @@ export default function EditTaskModal({
   });
   const [checkedItems, setCheckedItems] = useState(() => {
     const checked = task?.checklist?.filter((item) => item.completed === true);
-    console.log(checked);
     return checked?.length || 0;
   });
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const checkList = list?.filter((item) => item.content !== "");
     setTaskData({ ...taskData, checklist: checkList });
+    setCheckedItems((prev) => {   
+      const checked = checkList?.filter((item) => item.completed === true);
+      return checked?.length || prev;
+    });
+
+    //Focus on new added list item
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [list]);
 
   const handlePriority = (value) => {
@@ -45,27 +54,35 @@ export default function EditTaskModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(taskData);
     const { isValid, invalidFields } = validateTask(taskData);
     if (!isValid) {
-      console.log(invalidFields);
       setIsError(invalidFields);
       return;
     }
-    saveTask(taskData);
+    const cList = taskData.checklist.map((item) => {
+      return { content: item.content, completed: item.completed };
+    });
+    const data = {
+      ...taskData,
+      checklist: cList,
+    };
+    saveTask(data);
     handleClose();
   };
 
   const handleDeleteList = (index) => {
     const newList = [...list];
     newList.splice(index, 1);
-    console.log(index, newList);
     setList(newList);
   };
 
   const handleAddList = () => {
     if (!list || list.slice(-1)[0].content !== "") {
-      const item = { content: "", completed: false, _id:list?.length + 10 + "newtask" };
+      const item = {
+        content: "",
+        completed: false,
+        _id: list?.length + 10 + "newtask",
+      };
       const newList = list ? [...list, item] : [item];
       setList(newList);
     }
@@ -75,6 +92,18 @@ export default function EditTaskModal({
     const modifiedList = list;
     modifiedList[index] = value;
     setList(modifiedList);
+    setTaskData({ ...taskData, checklist: modifiedList });
+  };
+
+  const handleIsChecked = (value, index) => {
+    const modifiedList = list;
+    modifiedList[index].completed = value;
+    setList(modifiedList);
+    setTaskData({ ...taskData, checklist: modifiedList });
+    setCheckedItems((prev) => {
+      const checked = modifiedList?.filter((item) => item.completed === true);
+      return checked?.length || prev;
+    });
   };
 
   const handleDueDate = (date) => {
@@ -166,7 +195,7 @@ export default function EditTaskModal({
               Assign to
               <AssigneeList
                 onChange={handleAssignee}
-                email={taskData?.assignee}
+                email={taskData?.assignee?.email}
               />
             </div>
             <div className={styles.list}>
@@ -190,6 +219,8 @@ export default function EditTaskModal({
                         index={index}
                         handleDelete={handleDeleteList}
                         handleChange={handleList}
+                        ref={index === list.length - 1 ? inputRef : null}
+                        handleIsChecked={handleIsChecked}
                       />
                     );
                   })}

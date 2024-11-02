@@ -11,7 +11,6 @@ export default function AssigneeList({ onChange, email }) {
 
   useEffect(() => {
     getUserList().then((res) => {
-      console.log(res.data);
       setUserList(res.data.allUsers);
     });
   }, []);
@@ -35,7 +34,7 @@ export default function AssigneeList({ onChange, email }) {
                   className={styles.assign}
                   onClick={() => {
                     setAssignee(item.email);
-                    onChange(item._id);
+                    onChange(item._id, item.email);
                     setIsDropdownOpen(false);
                   }}
                 >

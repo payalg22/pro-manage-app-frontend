@@ -155,3 +155,21 @@
     background-color: rgba(156, 183, 197, 1);
     border-radius: 10px;
 }
+
+@media ((min-width: 900px) and (max-width: 1024px)) {
+    .container {
+        width: 600px;
+    }
+}
+
+@media ((min-width: 768px) and (max-width: 900px)) {
+    .container {
+        width: 550px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 500px;
+    }
+}

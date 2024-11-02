@@ -8,10 +8,22 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { formatDueDate, isPastDue } from "../utils/getDates";
 import DeleteTaskModal from "./DeleteTaskModal";
 import EditTaskModal from "./EditTaskModal";
-import { changeCategory, deleteTask } from "../services/task";
+import {
+  changeCategory,
+  changeListStatus,
+  deleteTask,
+  updateTask,
+} from "../services/task";
+import createLogo from "../utils/createLogo";
 
-export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast }) {
-  const { checklist, priority, duedate, category, _id } = task;
+export default function Card({
+  task,
+  onCollapse,
+  isCollapsed,
+  pageRefresh,
+  toast,
+}) {
+  const { checklist, priority, duedate, category, _id, assignee } = task;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [categoryList, setCategoryList] = useState([
@@ -25,7 +37,6 @@ export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast
   const modalRef = useRef(null);
   const [checkedItems, setCheckedItems] = useState(() => {
     const checked = task?.checklist?.filter((item) => item.completed === true);
-    console.log(checked);
     return checked?.length || 0;
   });
 
@@ -69,32 +80,49 @@ export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast
   };
 
   const handleCategory = async (nCategory) => {
-    console.log(nCategory);
     const res = await changeCategory(_id, nCategory);
-    console.log(res);
     pageRefresh(true);
   };
 
   const handleShare = () => {
-    //TODO toast notification
     const base = window.location.origin;
     const link = `${base}/sharedtask/${_id}`;
     navigator.clipboard.writeText(link);
-    console.log("Link copied successfully");
     setIsMenuOpen(false);
     toast("Link Copied");
   };
 
   const handleDelete = async () => {
     const res = await deleteTask(_id);
-    console.log(res);
-    if(res.status === 200) {
-        console.log("toast: task delted");
+    if (res.status === 200) {
+      toast("Task Deleted");
     } else {
-        console.log("toast: Couldn't delete task");
+      toast("Something went wrong");
     }
     setIsMenuOpen(false);
     pageRefresh(true);
+  };
+
+  const handleSubmit = async (task) => {
+    const res = await updateTask(_id, task);
+
+    if (res?.status === 200) {
+      pageRefresh(true);
+      toast("Task updated");
+    }
+    setIsMenuOpen(false);
+  };
+
+  const handleIsChecked = async (value, index) => {
+    const item = { listId: checklist[index]._id, value };
+    const res = await changeListStatus(_id, item);
+    if (res.status === 200) {
+      pageRefresh(true);
+      setCheckedItems((prev) => {
+        return value ? prev + 1 : prev - 1;
+      });
+      return;
+    }
   };
 
   return (
@@ -102,6 +130,9 @@ export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast
       <div className={styles.header}>
         <div className={styles.priority}>
           <Priority type={priority} />
+          {assignee && (
+            <div className={styles.assignee}>{createLogo(assignee.name)}</div>
+          )}
         </div>
         <div className={styles.menu} ref={menuRef}>
           <MoreHorizOutlinedIcon onClick={handleMenu} />
@@ -111,6 +142,8 @@ export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast
                 modalRef={modalRef}
                 task={task}
                 triggerEle={<li>Edit</li>}
+                saveTask={handleSubmit}
+                pageRefresh={pageRefresh}
               />
               <li onClick={handleShare}>Share</li>
               <DeleteTaskModal modalRef={modalRef} onDelete={handleDelete} />
@@ -137,7 +170,15 @@ export default function Card({ task, onCollapse, isCollapsed, pageRefresh, toast
           style={{ display: isExpanded ? "flex" : "none" }}
         >
           {checklist.map((item, index) => {
-            return <ChecklistItem key={index} isDelete={false} item={item} />;
+            return (
+              <ChecklistItem
+                key={index}
+                isDelete={false}
+                item={item}
+                handleIsChecked={handleIsChecked}
+                index={index}
+              />
+            );
           })}
         </div>
       </div>

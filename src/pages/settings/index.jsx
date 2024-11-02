@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./settings.module.css";
 import Panel from "../../components/Panel";
 import Form from "../../components/Form";
+import { getUserDetails, updateUser } from "../../services/user";
+import { validateUser } from "../../utils/validateForm";
+import { toast, ToastContainer } from "react-toastify";
+{
+}
 
 export default function Settings() {
   const [formData, setFormData] = useState({
@@ -10,17 +15,94 @@ export default function Settings() {
     oldPassword: "",
     newPassword: "",
   });
-
   const [error, setError] = useState({
     name: false,
     email: false,
     oldPassword: false,
     newPassword: false,
   });
+  const [formError, setFormError] = useState("");
+  const [userData, setUserData] = useState();
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  useEffect(() => {
+    getUserDetails().then((res) => {
+      if (res.status === 200) {
+        const { userInfo } = res.data;
+        setFormData({
+          ...formData,
+          name: userInfo.name,
+          email: userInfo.email,
+          _id: userInfo._id,
+        });
+        setUserData(userInfo);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setError({
+      name: false,
+      email: false,
+      oldPassword: false,
+      newPassword: false,
+    });
+    setFormError(false);
+  }, [formData]);
+
+  async function handleSubmit(e) {
+    let change = 0;
+
+    Object.keys(formData).forEach((item) => {
+      if (item === "name" || item === "email") {
+        if (formData[item] !== userData[item]) {
+          change++;
+        }
+      } else {
+        if (item === "newPassword" && formData[item]) {
+          change++;
+        }
+      }
+    });
+    if (change > 1) {
+      setFormError("Only one field can be changed at a time");
+      return;
+    }
+
+    if (change === 0) {
+      return;
+    }
+    //  todo form validation
+    const { isValid, invalidFields } = validateUser(formData);
+    if (!isValid) {
+      setError(invalidFields);
+      return;
+    }
+
+    const res = await updateUser(formData);
+    if (res.status === 201) {
+      notify();
+      return;
+      //ToDO logout: clear localstorage token
+    } else {
+      setFormError(
+        res?.data?.message || "Something went wrong. Please try again"
+      );
+      return;
+    }
   }
+
+  const notify = () => {
+    toast(`Changes Saved`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   const inputFields = [
     {
@@ -50,7 +132,7 @@ export default function Settings() {
     {
       type: "password",
       placeholder: "Old Password",
-      errorMsg: "Incorrect password",
+      errorMsg: "Please enter password",
       isError: error.oldPassword,
       value: formData.oldPassword,
       onChange: (e) =>
@@ -62,9 +144,8 @@ export default function Settings() {
     {
       type: "password",
       placeholder: "New Password",
-      errorMsg:
-        "Password should contain a sepcial character, a number, letters and minimum 8 characters lon",
-      isError: error.cnewPassword,
+      errorMsg: error.newPassword,
+      isError: error.newPassword,
       value: formData.newPassword,
       onChange: (e) =>
         setFormData({
@@ -80,12 +161,10 @@ export default function Settings() {
         <Panel option="settings" />
       </div>
       <div className={styles.right}>
+        <ToastContainer />
         <h2>Settings</h2>
-        <Form
-          fields={inputFields}
-          onSubmit={handleSubmit}
-          formType="Update"
-        />
+        {formError && <p className={styles.error}>{formError}</p>}
+        <Form fields={inputFields} onSubmit={handleSubmit} formType="Update" />
       </div>
     </div>
   );

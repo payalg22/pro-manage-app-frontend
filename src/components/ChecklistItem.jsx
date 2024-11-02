@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styles from "./ChecklistItem.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function ChecklistItem({
+const ChecklistItem = forwardRef(({
   isDelete,
   item,
   index,
   handleDelete,
   handleChange,
-}) {
+  handleIsChecked
+}, ref) => {
   const [content, setContent] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
@@ -20,11 +21,12 @@ export default function ChecklistItem({
   const handleTask = (e) => {
     setContent(e.target.value);
     let task = {
-        content: e.target.value,
-        completed: isChecked,
-    }
+      content: e.target.value,
+      completed: isChecked,
+      _id: index + 10 + "new",
+    };
     handleChange(task, index);
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -33,7 +35,10 @@ export default function ChecklistItem({
           type="checkbox"
           className={styles.inputChkbox}
           checked={isChecked}
-          onChange={() => setIsChecked(!isChecked)}
+          onChange={() => {
+            handleIsChecked(!isChecked, index);
+            setIsChecked(!isChecked)
+            }}
         />
         <span className={styles.chkbox}></span>
         <input
@@ -42,6 +47,7 @@ export default function ChecklistItem({
           className={styles.title}
           disabled={!isDelete}
           onChange={handleTask}
+          ref={ref}
         />
       </label>
       {isDelete && (
@@ -49,10 +55,11 @@ export default function ChecklistItem({
           className={styles.delete}
           onClick={() => {
             handleDelete(index);
-            console.log(index, item, content);
           }}
         />
       )}
     </div>
   );
-}
+});
+
+export default ChecklistItem;

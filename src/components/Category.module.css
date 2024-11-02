@@ -50,3 +50,9 @@
      background-color: rgba(141, 170, 185, 0.8);
      border-radius: 10px;
  }
+
+ @media (min-width: 900px) and (max-width: 1024px) {
+    .container {
+        width: 325px;
+    }
+ }

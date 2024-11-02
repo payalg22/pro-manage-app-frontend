@@ -2,19 +2,31 @@ import React, { useState } from "react";
 import styles from "./AddMemberModal.module.css";
 import Popup from "reactjs-popup";
 import shareIcon from "../assets/share.png";
+import AssigneeList from "./AssigneeList";
+import { addMember } from "../services/task";
 
-export default function AddMemberModal() {
+export default function AddMemberModal({ pageRefresh, toast }) {
   const [isNotification, setIsNotification] = useState(false);
   const [userEmail, setUserEmail] = useState();
 
-  const handleAddMember = () => {
-    setIsNotification(true);
+  const handleAddMember = async () => {
+    const res = await addMember(userEmail);
+    if (res.status === 200) {
+      setIsNotification(true);
+      pageRefresh(true);
+    } else {
+      toast("Something went wrong");
+    }
+  };
+
+  const handleChange = (id, email) => {
+    setUserEmail({ email, _id: id });
   };
 
   const handleModalClose = () => {
     setUserEmail("");
     setIsNotification(false);
-  }
+  };
 
   return (
     <Popup
@@ -32,7 +44,7 @@ export default function AddMemberModal() {
         <div className={styles.container}>
           {isNotification ? (
             <div className={styles.notification}>
-              <p className={styles.heading}>{userEmail} added to board</p>
+              <p className={styles.heading}>{userEmail.email} added to board</p>
               <button
                 className={styles.add}
                 onClick={() => {
@@ -45,17 +57,18 @@ export default function AddMemberModal() {
           ) : (
             <div className={styles.getEmail}>
               <p className={styles.heading}>Add people to the board</p>
-              <input
-                type="text"
-                placeholder="Enter the mail"
-                className={styles.email}
-                value={userEmail}
-                onChange={(e) => {
-                  setUserEmail(e.target.value);
-                }}
-              />
+              <div className={styles.userlist}>
+                <AssigneeList onChange={handleChange} />
+              </div>
               <div className={styles.buttons}>
-                <button className={styles.cancel}>Cancel</button>
+                <button
+                  className={styles.cancel}
+                  onClick={() => {
+                    close();
+                  }}
+                >
+                  Cancel
+                </button>
                 <button className={styles.add} onClick={handleAddMember}>
                   Add Email
                 </button>

@@ -1,0 +1,49 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(67, 145, 237, 0.1);
+    font-family: Poppins;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.title {
+    font-size: 6rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.subheading {
+    font-size: 2rem;
+    margin: 5px;
+}
+
+.msg {
+    max-width: 500px;
+    margin: 5px;
+}
+
+.btn {
+    background-color: rgba(23, 162, 184, 1);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    margin: 15px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: hsla(216, 57%, 91%, 1);
+}
