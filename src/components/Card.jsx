@@ -151,7 +151,9 @@ export default function Card({
           )}
         </div>
       </div>
-      <p className={styles.title}>{task.title}</p>
+      <p className={styles.title} title={task.title}>
+        {task.title.length > 50 ? task.title.slice(0, 50) + "..." : task.title}
+      </p>
       <div className={styles.chklistContainer}>
         <div className={styles.chklistHeader}>
           <p>
