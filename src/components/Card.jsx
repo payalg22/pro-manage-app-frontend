@@ -80,6 +80,7 @@ export default function Card({
   };
 
   const handleCategory = async (nCategory) => {
+    
     const res = await changeCategory(_id, nCategory);
     pageRefresh(true);
   };
@@ -186,7 +187,15 @@ export default function Card({
       </div>
       <div className={styles.footer}>
         {duedate ? (
-          <span className={isPastDueDate ? styles.duedate : styles.normal}>
+          <span
+            className={
+              category === "done"
+                ? styles.green
+                : !isPastDueDate
+                ? styles.normal
+                : styles.duedate
+            }
+          >
             {formattedDueDate}
           </span>
         ) : (

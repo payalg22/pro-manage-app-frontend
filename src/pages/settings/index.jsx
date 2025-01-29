@@ -5,8 +5,6 @@ import Form from "../../components/Form";
 import { getUserDetails, updateUser } from "../../services/user";
 import { validateUser } from "../../utils/validateForm";
 import { toast, ToastContainer } from "react-toastify";
-{
-}
 
 export default function Settings() {
   const [formData, setFormData] = useState({
@@ -71,7 +69,6 @@ export default function Settings() {
     if (change === 0) {
       return;
     }
-    //  todo form validation
     const { isValid, invalidFields } = validateUser(formData);
     if (!isValid) {
       setError(invalidFields);
@@ -81,8 +78,10 @@ export default function Settings() {
     const res = await updateUser(formData);
     if (res.status === 201) {
       notify();
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "/login";
       return;
-      //ToDO logout: clear localstorage token
     } else {
       setFormError(
         res?.data?.message || "Something went wrong. Please try again"

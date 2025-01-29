@@ -88,7 +88,7 @@ export default function Register() {
       type: "password",
       placeholder: "Password",
       errorMsg:
-        "Password should contain a sepcial character, a number, letters and minimum 8 characters long",
+        "Password should contain a special character, a number, letters and minimum 8 characters long",
       isError: error.password,
       value: formData.password,
       onChange: (e) =>

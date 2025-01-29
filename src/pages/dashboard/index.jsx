@@ -67,7 +67,7 @@ export default function Dashboard() {
       draggable: false,
       progress: undefined,
       theme: "light",
-    });
+    }); 
   };
 
   const getTasks = async () => {

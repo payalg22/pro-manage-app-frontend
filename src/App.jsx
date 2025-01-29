@@ -8,7 +8,7 @@ import {
   Analytics,
   SharedTask,
   NotFound,
-} from "./pages/index";
+} from "./pages/index"; 
 
 function App() {
   return (

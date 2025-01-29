@@ -10,7 +10,7 @@ function FormField({ field }) {
   const [inputType, setInputType] = useState();
 
   useEffect(() => {
-    setInputType(type);
+    setInputType(type); 
   }, []);
 
   const handleViewPassword = () => {
