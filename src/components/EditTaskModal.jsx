@@ -37,7 +37,7 @@ export default function EditTaskModal({
   useEffect(() => {
     const checkList = list?.filter((item) => item.content !== "");
     setTaskData({ ...taskData, checklist: checkList });
-    setCheckedItems((prev) => {   
+    setCheckedItems((prev) => {
       const checked = checkList?.filter((item) => item.completed === true);
       return checked?.length || prev;
     });
